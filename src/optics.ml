@@ -102,7 +102,7 @@ module Optional = struct
     in
     Lens.V (wrapped_focus, wrapped_return)
 
-  let ( >>= ) (type a b c) (Lens.V (f1, g1) : (a, b) Lens.t)
+  let ( >& ) (type a b c) (Lens.V (f1, g1) : (a, b) Lens.t)
       (Prism.V (f2, g2) : (b, c) Prism.t) : (a, c) t =
     let wrapped_focus x =
       let b, r1 = f1 x in
@@ -117,7 +117,7 @@ module Optional = struct
     in
     Lens.V (wrapped_focus, wrapped_return)
 
-  let ( >>? ) (type a b c) (Prism.V (f1, g1) : (a, b) Prism.t)
+  let ( >$ ) (type a b c) (Prism.V (f1, g1) : (a, b) Prism.t)
       (Lens.V (f2, g2) : (b, c) Lens.t) : (a, c) t =
     let wrapped_focus x =
       match f1 x with
@@ -153,8 +153,8 @@ end
 
 module Infix = struct
   let ( >> ) = Optional.( >> )
-  let ( >& ) = Optional.( >>= )
-  let ( >$ ) = Optional.( >>? )
+  let ( >& ) = Optional.( >& )
+  let ( >$ ) = Optional.( >$ )
   let ( & ) = Lens.( >> )
   let ( $ ) = Prism.( >> )
 end

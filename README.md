@@ -80,28 +80,22 @@ val value : (prop, prop_value) Lens.t = Optics.Lens.V (<fun>, <fun>)
 Lenses compose nicely in the way you might expect. Given a `('a, 'b) Lens.t` and a `('b, 'c) Lens.t` we compose the two to get a `('a, 'c) Lens.t`.
 
 ```ocaml
-# let key_at n = Lens.(props @ nth n @ key);;
-Line 1, characters 22-27:
-Error: This expression has type (t, prop list) Lens.t
-       but an expression was expected of type 'a list
-# let value_at n = Lens.(props @ nth n @ value);;
-Line 1, characters 24-29:
-Error: This expression has type (t, prop list) Lens.t
-       but an expression was expected of type 'a list
+# let key_at n = Lens.(props >> nth n >> key);;
+val key_at : int -> (t, string) Lens.t = <fun>
+# let value_at n = Lens.(props >> nth n >> value);;
+val value_at : int -> (t, prop_value) Lens.t = <fun>
 ```
 
 #### Getting and Setting Values
 
 ```ocaml
 # Lens.(get (key_at 0) example), Lens.(get (value_at 0) example);;
-Line 1, characters 12-18:
-Error: Unbound value key_at
+- : string * prop_value = ("Hello", String "World")
 ```
 
 ```ocaml
 # Lens.set (key_at 0) example "Salut" |> Lens.get (key_at 0);;
-Line 1, characters 50-56:
-Error: Unbound value key_at
+- : string = "Salut"
 ```
 
 
@@ -158,9 +152,8 @@ val string : (prop_value, string) Prism.t = Optics.Prism.V (<fun>, <fun>)
 Prisms compose just like [lenses](#composing-lenses).
 
 ```ocaml
-# Prism.(@);;
-Line 1, characters 1-10:
-Error: Unbound value Prism.@
+# Prism.(>>);;
+- : ('a, 'b) Prism.t -> ('b, 'c) Prism.t -> ('a, 'c) Prism.t = <fun>
 ```
 
 #### Getting and Setting Values
@@ -190,12 +183,10 @@ type nonrec ('s, 'a) t = ('s, 'a option) Lens.t
 Optionals are actually a middle-ground between prisms and lenses that allow us to compose a lens and prism.
 
 ```ocaml
-# let t_to_point2d = Optional.(point @^ point2d);;
-Line 1, characters 36-38:
-Error: Unbound value @^
+# let t_to_point2d = Optional.(point >& point2d);;
+val t_to_point2d : (t, point2d) Optional.t = Optics.Lens.V (<fun>, <fun>)
 # Lens.get t_to_point2d example;;
-Line 1, characters 10-22:
-Error: Unbound value t_to_point2d
+- : point2d option = Some {x = 1.; y = 2.}
 ```
 
 #### Deeper Composition with Infix Operators
