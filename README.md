@@ -206,7 +206,13 @@ Within the `Infix` operator the rules are:
 
  - If the operator starts with `>` then it produces an `Optional.t`
  - If the operator contains `&`, it is closely tied to `Lens.t`. Either it composes lenses or the LHS should be a lens.
- - If the operator contains `$`, it is closely tied to `Prism.t`. Either it composes prisms or the LHS should be a prism.
+   + `&>` composes an optional followed by a lens returning an optional
+   + `&` is `Lens.(>>)`
+   + `>&` composes a lens with a prism and returns an optional
+ - If the operator contains `$`, it is closely tied to `Prism.t`.
+   + `$>` composes an optional followed by a prism returning an optional
+   + `$` is `Prism.(>>)`
+   + `>$` composes a prism with a lens and returns an optional
 
 ```ocaml
 # #show_module Infix;;
@@ -214,6 +220,10 @@ module Infix :
   sig
     val ( >> ) :
       ('a, 'b) Optional.t -> ('b, 'c) Optional.t -> ('a, 'c) Optional.t
+    val ( &> ) :
+      ('a, 'b) Optional.t -> ('b, 'c) Lens.t -> ('a, 'c) Optional.t
+    val ( $> ) :
+      ('a, 'b) Optional.t -> ('b, 'c) Prism.t -> ('a, 'c) Optional.t
     val ( >& ) : ('a, 'b) Lens.t -> ('b, 'c) Prism.t -> ('a, 'c) Optional.t
     val ( >$ ) : ('a, 'b) Prism.t -> ('b, 'c) Lens.t -> ('a, 'c) Optional.t
     val ( & ) : ('a, 'b) Lens.t -> ('b, 'c) Lens.t -> ('a, 'c) Lens.t

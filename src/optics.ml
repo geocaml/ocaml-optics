@@ -153,6 +153,8 @@ end
 
 module Infix = struct
   let ( >> ) = Optional.( >> )
+  let ( &> ) o l = Optional.(o >> lens l)
+  let ( $> ) o p = Optional.(o >> prism p)
   let ( >& ) = Optional.( >& )
   let ( >$ ) = Optional.( >$ )
   let ( & ) = Lens.( >> )
