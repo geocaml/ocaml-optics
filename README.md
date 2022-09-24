@@ -3,7 +3,7 @@ ocaml-optics
 
 *Status: WIP & Experimental*
 
-Optics using [existentials](https://www.tweag.io/blog/2022-05-05-existential-optics/).
+Monomorphic (I think) optics using [existentials](https://www.tweag.io/blog/2022-05-05-existential-optics/). This work was inspired by [ocaml-generics](https://github.com/CraigFe/ocaml-generics). Note that the optics here are quite heavy and will likely use more memory than hand-crafted accessors with pattern-matching. However, in cases of deeply nested data-structures that introduce lots of branches with variants with many construcotrs (e.g. [ocaml-geojson](https://github.com/geocaml/ocaml-geojson)), they can be a much more pleasant way to get values out of the data structuree.
 
 ```ocaml
 # #require "optics";;
@@ -60,7 +60,7 @@ val example : t =
 
 ### Lenses
 
-A lens allows you to get and set fields of a record. Defining one requires to provide two functions that break apart a record into a field and the rest of the record, and another function which builds the record back together.
+A lens allows you to get and set fields of a record. Defining one requires you to provide two functions that break apart a record into a field and the rest of the record, and another function which builds the record back together.
 
 #### Constructing Lenses
 
@@ -129,7 +129,6 @@ val point2d : (point, point2d) Prism.t = Optics.Prism.V (<fun>, <fun>)
   Optics.Prism.V (into, out_of);;
 val point3d : (point, point3d) Prism.t = Optics.Prism.V (<fun>, <fun>)
 ```
-
 
 And for property values (only `string` shown for brevity).
 
